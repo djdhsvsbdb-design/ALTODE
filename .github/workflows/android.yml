@@ -1,0 +1,58 @@
+name: ALTODE Android
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "android-launcher"
+      - ".gitmodules"
+      - "tools/**"
+      - ".github/workflows/android.yml"
+      - "ALTODE_ANDROID.md"
+  push:
+    branches: [main, "altode/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  android-release:
+    name: Build ALTODE Android launcher
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout with launcher submodule
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Prepare ALTODE branding
+        run: python3 tools/prepare_altode_android.py
+
+      - name: Build release APKs
+        working-directory: android-launcher
+        run: ./gradlew --no-daemon assembleStandardRelease
+
+      - name: Report APK sizes
+        if: always()
+        run: |
+          find android-launcher/app/build/outputs/apk -type f -name '*.apk' -print0 2>/dev/null \
+            | xargs -0 -r du -h
+
+      - name: Upload release APKs
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ALTODE-android-release
+          path: android-launcher/app/build/outputs/apk/**/*.apk
+          if-no-files-found: error
+          retention-days: 14

@@ -1,0 +1,3 @@
+[submodule "android-launcher"]
+	path = android-launcher
+	url = https://github.com/geode-sdk/android-launcher.git
