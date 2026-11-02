@@ -8,8 +8,9 @@ and mod catalogue instead of creating a second, incompatible mod system.
 
 - The repository root is the native Geode/ALTODE loader source.
 - `android-launcher/` is a pinned Git submodule containing the official Android launcher.
-- `tools/prepare_altode_android.py` applies the ALTODE app identity to a local
-  submodule checkout. The upstream launcher source itself is not rewritten in this repository.
+- `tools/prepare_altode_android.py` applies the ALTODE app identity and emerald/teal
+  color theme to a local submodule checkout. The upstream launcher source itself is
+  not rewritten in this repository.
 
 The Android launcher currently pins the stable Geode runtime version in its Gradle
 build. That is intentional for compatibility with the published Android runtime and
@@ -59,7 +60,7 @@ the game's proprietary files; users must install their own legitimate copy.
 
 ## Next implementation work
 
-1. Replace the upstream launcher artwork and Compose screens with ALTODE branding.
+1. Replace the upstream launcher artwork and continue adapting Compose screens to ALTODE branding.
 2. Keep Geode's install/update, mod index, dependency, log, and safe-mode services intact.
 3. Add CI builds for `arm64-v8a` and `armeabi-v7a`, then measure release APK sizes.
 4. Only move the Android runtime to ALTODE's native alpha after matching Android
