@@ -49,6 +49,28 @@ def main() -> int:
                  '<string name="launcher_update_name">Geode Launcher v%1$s</string>',
                  '<string name="launcher_update_name">ALTODE Launcher v%1$s</string>')
 
+    colors = LAUNCHER / "app" / "src" / "main" / "java" / "com" / "geode" / "launcher" / "ui" / "theme" / "Color.kt"
+    color_text = colors.read_text(encoding="utf-8")
+    color_replacements = {
+        "Color(0xFFD0BCFF)": "Color(0xFFB7F3E3)",
+        "Color(0xFFCCC2DC)": "Color(0xFF9FCFC4)",
+        "Color(0xFFEFB8C8)": "Color(0xFFFFB86B)",
+        "Color(0xFF6650a4)": "Color(0xFF087E68)",
+        "Color(0xFF625b71)": "Color(0xFF356D62)",
+        "Color(0xFF7D5260)": "Color(0xFFB85D24)",
+    }
+    for source, target in color_replacements.items():
+        if target in color_text and source not in color_text:
+            continue
+        count = color_text.count(source)
+        if count != 1:
+            raise RuntimeError(
+                f"Expected one {source!r} in {colors}, found {count}; "
+                "review the upstream theme before patching."
+            )
+        color_text = color_text.replace(source, target, 1)
+    colors.write_text(color_text, encoding="utf-8")
+
     print("ALTODE Android branding applied.")
     print("Geode runtime version and mod-loader implementation were left unchanged.")
     print("Build with: cd android-launcher && ./gradlew assembleStandardRelease")
